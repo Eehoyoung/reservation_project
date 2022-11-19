@@ -1,0 +1,48 @@
+server:
+  port: 9090
+  servlet:
+    context-path: /
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+spring:
+
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/reservation?serverTime=Asia/Seoul
+    username: root
+    password: cv93523827!!
+
+  jpa:
+    open-in-view: true
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      use-new-id-generator-mappings: false
+    show-sql: false
+    properties:
+      hibernate.format_sql: true
+
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+
+  security:
+    user:
+      name: test
+      password: 1234
+
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 200MB
+
+file:
+  path: C:/houseImgDir/upload/
+
+kakao:
+  key: 99464c317cd7882fee923fe9ebcfdafb
