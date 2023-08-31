@@ -12,7 +12,7 @@ public class ChatServer {
 
     // 현재 채팅 서버에 접속한 클라이언트(WebSocket Session) 목록
     // static 붙여야함!!
-    private static List<Session> list = new ArrayList<>();
+    private static final List<Session> list = new ArrayList<>();
 
     private void print() {
         System.out.printf("[%tT] %s\n", Calendar.getInstance(), "클라이언트 연결");

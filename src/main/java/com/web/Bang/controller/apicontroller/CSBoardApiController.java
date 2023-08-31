@@ -6,19 +6,17 @@ import com.web.Bang.model.CustomServiceBoard;
 import com.web.Bang.model.CustomServiceReply;
 import com.web.Bang.model.type.CSBoardType;
 import com.web.Bang.model.type.RoleType;
-import com.web.Bang.service.CSBoardService;
+import com.web.Bang.service.CSBoardServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api")
 public class CSBoardApiController {
-    private final CSBoardService csBoardService;
-
-    public CSBoardApiController(CSBoardService csBoardService) {
-        this.csBoardService = csBoardService;
-    }
+    private final CSBoardServiceImpl csBoardService;
 
     @PostMapping("/cs-write")
     public ResponseDto<Integer> writeBoard(@AuthenticationPrincipal PrincipalDetail principal, @RequestBody CustomServiceBoard serviceBoard) {
@@ -34,14 +32,13 @@ public class CSBoardApiController {
 
     @PutMapping("/cs-update")
     public ResponseDto<String> updateBoard(@AuthenticationPrincipal PrincipalDetail principal, @RequestBody CustomServiceBoard board) {
-        System.out.println(board);
         CustomServiceBoard tempboard = csBoardService.findCSboardByid(board.getId());
 
         if (tempboard.getUser().getId() != principal.getUser().getId()) {
             return new ResponseDto<>(HttpStatus.FORBIDDEN.value(), "NO");
         }
 
-        if (csBoardService.updateCsBoard(board)) {
+        if (Boolean.TRUE.equals(csBoardService.updateCsBoard(board))) {
             return new ResponseDto<>(HttpStatus.OK.value(), "OK");
         } else {
             return new ResponseDto<>(HttpStatus.FORBIDDEN.value(), "NO");
@@ -50,7 +47,6 @@ public class CSBoardApiController {
 
     @DeleteMapping("/cs-delete")
     public ResponseDto<String> deleteBaord(@RequestParam(value = "boardId") int id, @AuthenticationPrincipal PrincipalDetail principal) {
-        System.out.println("deltet    " + id);
         CustomServiceBoard tempboard = csBoardService.findCSboardByid(id);
         if (tempboard.getUser().getId() != principal.getUser().getId()) {
             return new ResponseDto<>(HttpStatus.FORBIDDEN.value(), "NO");
@@ -63,12 +59,11 @@ public class CSBoardApiController {
     public ResponseDto<CustomServiceReply> writeReply(@AuthenticationPrincipal PrincipalDetail principal,
                                                       @RequestBody CustomServiceReply customServiceReply,
                                                       @RequestParam(value = "boardId") int id) {
-        System.out.println(customServiceReply);
         if (principal.getUser().getRole() != RoleType.ADMIN) {
             return new ResponseDto<>(HttpStatus.FORBIDDEN.value(), null);
         }
 
-        CustomServiceReply csreply = csBoardService.saveReply(customServiceReply, id);
+        csBoardService.saveReply(customServiceReply, id);
         return new ResponseDto<>(HttpStatus.OK.value(), customServiceReply);
     }
 

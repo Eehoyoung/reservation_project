@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class Meta {
-    public SameName sameName;
-    public Integer pageableCount;
-    public Integer totalCount;
-    public Boolean isEnd;
+    private SameName sameName;
+    private Integer pageableCount;
+    private Integer totalCount;
+    private Boolean isEnd;
 
 }

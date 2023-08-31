@@ -6,10 +6,10 @@ import com.web.Bang.dto.RequestPostDto;
 import com.web.Bang.model.House;
 import com.web.Bang.model.Review;
 import com.web.Bang.model.WishList;
-import com.web.Bang.service.HouseService;
-import com.web.Bang.service.ReviewService;
-import com.web.Bang.service.WishListService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.web.Bang.service.HouseServiceImpl;
+import com.web.Bang.service.ReviewServiceImpl;
+import com.web.Bang.service.WishListServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -24,16 +24,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor
 public class HouseController {
 
-    @Autowired
-    private HouseService houseService;
-
-    @Autowired
-    private ReviewService reviewService;
-
-    @Autowired
-    private WishListService wishListService;
+    private final HouseServiceImpl houseService;
+    private final ReviewServiceImpl reviewService;
+    private final WishListServiceImpl wishListService;
 
     // 숙소 리스트 페이지 호출
     @GetMapping("/user/house-list")
@@ -45,9 +41,9 @@ public class HouseController {
         address = (address == null) ? "" : address;
         type = type == null ? "" : type;
 
-        if (address.equals("") && type.equals("")) {
+        if (address.isEmpty() && type.isEmpty()) {
             houseList = houseService.getHouseList();
-        } else if (address.equals("") || type.equals("")) {
+        } else if (address.isEmpty() || type.isEmpty()) {
             houseList = houseService.searchHouseByAddressOrType(address, type);
         } else {
             houseList = houseService.searchHouseByAddressAndType(address, type);
@@ -114,8 +110,7 @@ public class HouseController {
     }
 
     @PostMapping("/host/update-house/{houseId}")
-    public String updateHouse(@PathVariable int houseId, RequestPostDto requestPostDto,
-                              @AuthenticationPrincipal PrincipalDetail principalDetail) {
+    public String updateHouse(@PathVariable int houseId, RequestPostDto requestPostDto) {
         houseService.updateHouse(houseId, requestPostDto);
         return "redirect:/host/house-management";
     }

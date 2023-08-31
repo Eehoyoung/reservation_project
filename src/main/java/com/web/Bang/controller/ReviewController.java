@@ -2,9 +2,10 @@ package com.web.Bang.controller;
 
 import com.web.Bang.auth.PrincipalDetail;
 import com.web.Bang.model.Review;
-import com.web.Bang.service.HouseService;
-import com.web.Bang.service.ReservationService;
-import com.web.Bang.service.ReviewService;
+import com.web.Bang.service.HouseServiceImpl;
+import com.web.Bang.service.ReservationServiceImpl;
+import com.web.Bang.service.ReviewServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -18,20 +19,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.util.ArrayList;
 
 @Controller
+@RequiredArgsConstructor
 public class ReviewController {
-
-    private final ReviewService reviewService;
-
-    private final HouseService houseService;
-
-    private final ReservationService reservationService;
-
-    public ReviewController(ReservationService reservationService, ReviewService reviewService, HouseService houseService) {
-        this.reservationService = reservationService;
-        this.reviewService = reviewService;
-        this.houseService = houseService;
-    }
-
+    private final ReviewServiceImpl reviewService;
+    private final HouseServiceImpl houseService;
+    private final ReservationServiceImpl reservationService;
 
     // 리뷰 작성 폼 호출
     @GetMapping("/guest/review/post_form/{reservationId}")

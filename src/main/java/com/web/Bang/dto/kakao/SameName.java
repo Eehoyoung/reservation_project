@@ -13,8 +13,11 @@ import java.util.List;
 @AllArgsConstructor
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class SameName {
-    public List<Object> region = null;
-    public String keyword;
-    public String selectedRegion;
+
+    private List<Object> region = null;
+
+    private String keyword;
+
+    private String selectedRegion;
 
 }

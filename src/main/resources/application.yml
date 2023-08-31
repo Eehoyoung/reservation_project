@@ -14,7 +14,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/reservation?serverTime=Asia/Seoul
     username: root
-    password: cv93523827!!
+    password: Cv93523827!!
 
   jpa:
     open-in-view: true

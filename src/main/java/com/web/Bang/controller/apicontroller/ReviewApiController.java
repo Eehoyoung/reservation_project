@@ -4,8 +4,9 @@ import com.web.Bang.auth.PrincipalDetail;
 import com.web.Bang.dto.ResponseDto;
 import com.web.Bang.model.Reply;
 import com.web.Bang.model.Review;
-import com.web.Bang.service.HouseService;
-import com.web.Bang.service.ReviewService;
+import com.web.Bang.service.HouseServiceImpl;
+import com.web.Bang.service.ReviewServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -13,17 +14,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/review")
 public class ReviewApiController {
 
-    private final ReviewService reviewService;
+    private final ReviewServiceImpl reviewService;
 
-    private final HouseService houseService;
-
-    public ReviewApiController(ReviewService reviewService, HouseService houseService) {
-        this.reviewService = reviewService;
-        this.houseService = houseService;
-    }
+    private final HouseServiceImpl houseService;
 
     // 리뷰 작성 기능
     @PostMapping("/post/{houseId}")
@@ -57,7 +54,7 @@ public class ReviewApiController {
         if (principalDetail.getUser().getReportCount() > 2) {
             return new ResponseDto<>(HttpStatus.FORBIDDEN.value(), null);
         }
-        Reply replyEntity = reviewService.addReply(reviewId, reply, principalDetail.getUser());
+        Reply replyEntity = reviewService.addReply(reviewId, reply);
         return new ResponseDto<>(HttpStatus.OK.value(), replyEntity);
     }
 

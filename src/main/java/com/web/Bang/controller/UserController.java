@@ -6,9 +6,10 @@ import com.web.Bang.dto.kakao.OAuthToken;
 import com.web.Bang.model.User;
 import com.web.Bang.model.type.LoginType;
 import com.web.Bang.model.type.RoleType;
-import com.web.Bang.service.HouseService;
-import com.web.Bang.service.UserService;
-import com.web.Bang.service.WishListService;
+import com.web.Bang.service.HouseServiceImpl;
+import com.web.Bang.service.UserServiceImpl;
+import com.web.Bang.service.WishListServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -33,29 +34,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Controller
+@RequiredArgsConstructor
 public class UserController {
 
-    final
-    PrincipalDetailService detailService;
-    private final UserService userService;
-
-    private final WishListService wishListService;
-
-    private final HouseService houseService;
-
+    private final PrincipalDetailService detailService;
+    private final UserServiceImpl userService;
+    private final WishListServiceImpl wishListService;
+    private final HouseServiceImpl houseService;
     private final AuthenticationManager authenticationManager;
+
     @Value("${kakao.key}")
     private String kakaoPassword;
 
-    public UserController(UserService userService, WishListService wishListService, HouseService houseService, AuthenticationManager authenticationManager, PrincipalDetailService detailService) {
-        this.userService = userService;
-        this.wishListService = wishListService;
-        this.houseService = houseService;
-        this.authenticationManager = authenticationManager;
-        this.detailService = detailService;
-    }
 
     @GetMapping({"", "/"})
     public String home(Model model) {
@@ -162,7 +155,7 @@ public class UserController {
         RestTemplate kakaoUserInfoRestTemplate = new RestTemplate();
 
         HttpHeaders kakaoUserInfoHeaders = new HttpHeaders();
-        kakaoUserInfoHeaders.add("Authorization", "Bearer " + response.getBody().getAccessToken());
+        kakaoUserInfoHeaders.add("Authorization", "Bearer " + Objects.requireNonNull(response.getBody()).getAccessToken());
 
         HttpEntity<MultiValueMap<String, String>> kakaoUserInfoRequest = new HttpEntity<>(kakaoUserInfoHeaders);
 
@@ -172,8 +165,8 @@ public class UserController {
         KakaoProfile kakaoAccount = kakaoUserInfoResponse.getBody();
         System.out.println(kakaoAccount);
 
-        User kakaoUser = User.builder().username("kakao_" + kakaoAccount.getProperties().getNickname())
-                .email(kakaoUserInfoResponse.getBody().getKakaoAccount().getEmail()).password(kakaoPassword)
+        User kakaoUser = User.builder().username("kakao_" + Objects.requireNonNull(kakaoAccount).getProperties().getNickname())
+                .email(Objects.requireNonNull(kakaoUserInfoResponse.getBody()).getKakaoAccount().getEmail()).password(kakaoPassword)
                 .phoneNumber("폰 번호 재설정 필요").role(RoleType.GUEST).loginType(LoginType.KAKAO).build();
 
         System.out.println("kakaoUser" + kakaoUser);

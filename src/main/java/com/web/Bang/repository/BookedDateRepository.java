@@ -10,9 +10,6 @@ import java.util.List;
 
 public interface BookedDateRepository extends JpaRepository<BookedDate, Integer> {
 
-    @Query(value = "SELECT * FROM bookeddate WHERE resId = ?1", nativeQuery = true)
-    List<BookedDate> findAllByResId(@Param(value = "resId") int id);
-
     @Query(value = "select b.id as id, ResId, bookedDate\r\n"
             + "from bookeddate as b\r\n"
             + "inner join reservation as r\r\n"

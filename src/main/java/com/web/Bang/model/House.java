@@ -1,9 +1,7 @@
 package com.web.Bang.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -11,10 +9,12 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@ToString
 public class House {
 
     @Id
@@ -57,12 +57,4 @@ public class House {
     @OneToMany(mappedBy = "houseId", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JsonIgnoreProperties({"houseId", "guestId", "replies"})
     private List<Review> reviews;
-
-    @Override
-    public String toString() {
-        return "House [id=" + id + ", name=" + name + ", address=" + address + ", starScore=" + starScore
-                + ", oneDayPrice=" + oneDayPrice + ", type=" + type + ", image=" + image + ", capacity=" + capacity
-                + ", infoText=" + infoText + ", creationDate=" + creationDate + "]";
-    }
-
 }

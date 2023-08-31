@@ -6,9 +6,10 @@ import com.web.Bang.dto.HouseWaitDto;
 import com.web.Bang.dto.ResponsePaidDto;
 import com.web.Bang.dto.kakao.KaKaoPayResponseDto;
 import com.web.Bang.model.*;
-import com.web.Bang.service.HouseService;
-import com.web.Bang.service.ReservationService;
-import com.web.Bang.service.UserService;
+import com.web.Bang.service.HouseServiceImpl;
+import com.web.Bang.service.ReservationServiceImpl;
+import com.web.Bang.service.UserServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -23,23 +24,17 @@ import org.springframework.web.client.RestTemplate;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
+@RequiredArgsConstructor
 public class ReservationController {
 
     private final HttpSession httpSession;
-    private final UserService userService;
-    private final HouseService houseService;
-    private final ReservationService reservationService;
+    private final UserServiceImpl userService;
+    private final HouseServiceImpl houseService;
+    private final ReservationServiceImpl reservationService;
 
-    public ReservationController(HttpSession httpSession, UserService userService, HouseService houseService, ReservationService reservationService) {
-        this.httpSession = httpSession;
-        this.userService = userService;
-        this.houseService = houseService;
-        this.reservationService = reservationService;
-    }
-
-    // 예약 페이지를 그려주는데 필요한 데이터를 보내주는 기능
     @GetMapping("/guest/bookForm/{houseid}")
     public String reserveHouse(@PathVariable int houseid, Model model) {
         House house = houseService.getHouseDetail(houseid);
@@ -66,7 +61,6 @@ public class ReservationController {
     public String reserveHostTable(@AuthenticationPrincipal PrincipalDetail principalDetail, Model model) {
         List<HouseWaitDto> count = reservationService.getWaitCount(principalDetail.getUser().getId());
         List<House> houses = houseService.findAllByHostId(principalDetail.getUser().getId());
-        System.out.println(count);
         model.addAttribute("houses", houses);
         model.addAttribute("count", count);
         return "reservation/hostReserveTable";
@@ -76,7 +70,6 @@ public class ReservationController {
     @GetMapping("/guest/reserveTable")
     public String reserveUserTable(@AuthenticationPrincipal PrincipalDetail principalDetail, Model model) {
         User user = userService.findByUserId(principalDetail.getUser().getId());
-        System.out.println(user);
         List<Reservation> res = reservationService.getReservation(user);
         model.addAttribute("reservations", res);
         return "reservation/userReservationTable";
@@ -84,16 +77,16 @@ public class ReservationController {
 
     // 카카오 결제 완료 시 redirect 되는 주소
     @GetMapping("/guest/kakao/approve")
-    public String approve(@RequestParam String pg_token, Model model) {
+    public String approve(@RequestParam String pgToken, Model model) {
         ResponsePaidDto paidDto = (ResponsePaidDto) httpSession.getAttribute("kakao");
         httpSession.removeAttribute("kakao");
-        ResponseEntity<KaKaoPayResponseDto> response = requestKakaoPaymentApprove(pg_token, paidDto);
+        ResponseEntity<KaKaoPayResponseDto> response = requestKakaoPaymentApprove(pgToken, paidDto);
         KaKaoPayResponseDto dto = response.getBody();
 
         if (response.getStatusCode() == HttpStatus.OK) {
             reservationService.kakaoPaymentApprove(paidDto.getResId());
             Reservation res = reservationService.findByResId(paidDto.getResId());
-            dto.setApproved_at(dto.getApproved_at().replace("T", " "));
+            Objects.requireNonNull(dto).setApproved_at(dto.getApproved_at().replace("T", " "));
             model.addAttribute("kakao", dto);
             model.addAttribute("reservation", res);
 
@@ -119,9 +112,7 @@ public class ReservationController {
 
         HttpEntity<MultiValueMap<String, String>> message = new HttpEntity<>(param, header);
 
-        ResponseEntity<KaKaoPayResponseDto> response = transmitter.exchange("https://kapi.kakao.com/v1/payment/approve", HttpMethod.POST, message, KaKaoPayResponseDto.class);
-        System.out.println(response);
-        return response;
+        return transmitter.exchange("https://kapi.kakao.com/v1/payment/approve", HttpMethod.POST, message, KaKaoPayResponseDto.class);
     }
 
     // 예약완료시 예약에 관련된 어드바이스를 보여주는 기능
@@ -130,16 +121,4 @@ public class ReservationController {
         return "/advice/reservationAdvice";
     }
 
-    private void recordPayment(ResponsePaidDto paidDto, KaKaoPayResponseDto payApproveDto) {
-
-        Payment payment = Payment
-                .builder()
-                .aid(payApproveDto.getAid())
-                .approveAt(payApproveDto.getApproved_at())
-                .paymentMethod(payApproveDto.getPayment_method_type())
-                .total(payApproveDto.getAmount().getTotal())
-                .house(houseService.findById(paidDto.getHouseId()))
-                .build();
-
-    }
 }

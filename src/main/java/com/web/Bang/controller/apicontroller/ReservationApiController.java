@@ -1,11 +1,10 @@
 package com.web.Bang.controller.apicontroller;
 
-import com.web.Bang.auth.PrincipalDetail;
 import com.web.Bang.dto.*;
 import com.web.Bang.model.Reservation;
-import com.web.Bang.service.ReservationService;
+import com.web.Bang.service.ReservationServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
@@ -15,24 +14,18 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/reservation")
 public class ReservationApiController {
 
     final
     HttpSession httpSession;
 
-    private final ReservationService reservationService;
-
-    public ReservationApiController(HttpSession httpSession, ReservationService reservationService) {
-        this.httpSession = httpSession;
-        this.reservationService = reservationService;
-    }
-
+    private final ReservationServiceImpl reservationService;
 
     // 예약을 하는 기능
     @PostMapping("/book")
-    public ResponseDto<String> reserveHouse(@RequestBody Reservation reservation, @AuthenticationPrincipal PrincipalDetail principal) {
-        System.out.println(reservation);
+    public ResponseDto<String> reserveHouse(@RequestBody Reservation reservation) {
         reservationService.makeReservation(reservation);
         return new ResponseDto<>(HttpStatus.OK.value(), "OK");
     }
@@ -42,7 +35,7 @@ public class ReservationApiController {
     public List<HostTableDto> getHouseReservation(@RequestParam(value = "hostId") int hostId, @RequestParam(value = "houseId") int houseId,
                                                   @RequestParam(value = "month") int month) {
         List<HostTableDto> result;
-        if (String.valueOf(houseId).equals("")) {
+        if (String.valueOf(houseId).isEmpty()) {
             result = reservationService.getTableInfo(hostId, month);
         } else {
             result = reservationService.getTableInfo(hostId, houseId, month);
@@ -55,7 +48,6 @@ public class ReservationApiController {
     // 호스트 측 예약 취소 기능
     @DeleteMapping("/delete/{reservationId}")
     public ResponseDto<Integer> deleteReservation(@PathVariable int reservationId) {
-        System.out.println(reservationId);
         reservationService.cancelReservation(reservationId);
         return new ResponseDto<>(HttpStatus.OK.value(), reservationId);
     }
@@ -63,7 +55,6 @@ public class ReservationApiController {
     // 호스트 예약 승인 기능
     @PostMapping("/approve")
     public ResponseDto<Integer> approveRes(@RequestBody ApproveDto approveDto) {
-        System.out.println("get    " + approveDto);
         reservationService.changeResType(approveDto);
         return new ResponseDto<>(HttpStatus.ACCEPTED.value(), approveDto.getResId());
     }
@@ -71,15 +62,12 @@ public class ReservationApiController {
     // 예약에 대한 디테일 정보를 가져오는 기능
     @GetMapping("/detail/{resId}")
     public Reservation showResDetail(@PathVariable int resId) {
-        Reservation res = reservationService.findByResId(resId);
-        System.out.println(res);
-        return res;
+        return reservationService.findByResId(resId);
     }
 
     // 결제를 요청하는 기능
     @PostMapping("/kakao-pay")
     public KaKaoApproveDto payForKaKao(@RequestBody ResponsePaidDto paidDto) {
-        System.out.println(paidDto);
         Reservation res = reservationService.findByResId(paidDto.getResId());
         int price = reservationService.getRangeDay(res.getCheckInDate(), res.getCheckOutDate())
                 * res.getHouseId().getOneDayPrice();

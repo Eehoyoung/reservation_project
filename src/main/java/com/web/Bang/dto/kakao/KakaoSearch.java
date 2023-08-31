@@ -10,7 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class KakaoSearch {
-    public Meta meta;
-    public List<Document> documents = null;
+    private Meta meta;
+    private List<Document> documents = null;
 
 }

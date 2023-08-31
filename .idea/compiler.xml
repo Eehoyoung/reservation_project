@@ -7,11 +7,10 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="reservation_project" />
+        <module name="Bang" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="Bang" target="11" />
       <module name="reservation_project" target="11" />
     </bytecodeTargetLevel>
   </component>

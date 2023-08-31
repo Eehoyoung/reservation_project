@@ -10,6 +10,4 @@ import lombok.NoArgsConstructor;
 public class ApproveDto {
     private int resId;
     private String approve;
-
-
 }

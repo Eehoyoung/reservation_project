@@ -1,0 +1,11 @@
+
+j
+java:S2259S"HA "NullPointerException" could be thrown; "approveDto" is nullable here.(¤ §äøÿÿÿÿ8ŞáîÜ¤1
+b
+java:S4684"@Replace this persistent entity with a simple POJO or DTO object.(Æƒ¯úÿÿÿÿ8ááîÜ¤1
+g
+java:S2441T"EMake "ResponsePaidDto" serializable or don't store it in the session.(¶Ü§ ıÿÿÿÿ8çáîÜ¤1
+[
+java:S1128">Remove this unused import 'com.web.Bang.auth.PrincipalDetail'.(ìƒÿ8Ÿ‰òÜ¤1
+~
+java:S1128	"aRemove this unused import 'org.springframework.security.core.annotation.AuthenticationPrincipal'.(Øù¢8Ÿ‰òÜ¤1

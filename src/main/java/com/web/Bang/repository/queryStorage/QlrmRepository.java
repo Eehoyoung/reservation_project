@@ -13,8 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class QlrmRepository<T> {
 
-    @Autowired
-    EntityManager entityManager;
+    private final EntityManager entityManager;
 
     public List<T> returnDataList(String queryText, Class<T> target) {
         Query query = entityManager.createNativeQuery(queryText);

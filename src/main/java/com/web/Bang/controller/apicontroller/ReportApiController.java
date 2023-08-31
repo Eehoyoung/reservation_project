@@ -2,30 +2,29 @@ package com.web.Bang.controller.apicontroller;
 
 import com.web.Bang.auth.PrincipalDetail;
 import com.web.Bang.dto.ApproveDto;
+import com.web.Bang.dto.ReportDto;
 import com.web.Bang.dto.ResponseDto;
 import com.web.Bang.model.Report;
-import com.web.Bang.service.ReportService;
+import com.web.Bang.service.ReportServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/report")
 public class ReportApiController {
 
-    private final ReportService reportService;
-
-    public ReportApiController(ReportService reportService) {
-        this.reportService = reportService;
-    }
+    private final ReportServiceImpl reportService;
 
     /**
      * 게스트가 호스트의 댓글을 신고한다.
      */
     @PostMapping("/reply/{replyId}")
     public ResponseDto<Integer> reportReply(@PathVariable int replyId,
-                                            @AuthenticationPrincipal PrincipalDetail principalDetail, @RequestBody Report report) {
-        reportService.reportReply(principalDetail.getUser(), replyId, report);
+                                            @AuthenticationPrincipal PrincipalDetail principalDetail, @RequestBody ReportDto reportDto) {
+        reportService.reportReply(replyId, reportDto);
         return new ResponseDto<>(HttpStatus.OK.value(), 1);
     }
 
@@ -34,9 +33,9 @@ public class ReportApiController {
      */
     @PostMapping("/review/{reviewId}")
     public ResponseDto<Integer> reportReview(@PathVariable int reviewId,
-                                             @AuthenticationPrincipal PrincipalDetail principalDetail, @RequestBody Report report) {
+                                             @AuthenticationPrincipal PrincipalDetail principalDetail) {
 
-        reportService.reportReview(principalDetail.getUser(), reviewId, report);
+        reportService.reportReview(principalDetail.getUser(), reviewId);
         return new ResponseDto<>(HttpStatus.OK.value(), 1);
     }
 

@@ -3,7 +3,8 @@ package com.web.Bang.controller;
 import com.web.Bang.auth.PrincipalDetail;
 import com.web.Bang.model.CustomServiceBoard;
 import com.web.Bang.model.type.RoleType;
-import com.web.Bang.service.CSBoardService;
+import com.web.Bang.service.CSBoardServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -18,16 +19,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor
 public class CSBoardController {
-    private final CSBoardService csBoardService;
-
-    public CSBoardController(CSBoardService csBoardService) {
-        this.csBoardService = csBoardService;
-    }
+    private final CSBoardServiceImpl csBoardService;
 
     @GetMapping("/user/cs")
     public String intoCustomerService(
-            @PageableDefault(size = 10, direction = Direction.DESC, page = 0, sort = "id") Pageable pageable, String q,
+            @PageableDefault(direction = Direction.DESC, sort = "id") Pageable pageable, String q,
             Model model) {
         String st = (q == null) ? "" : q;
         Page<CustomServiceBoard> boards = csBoardService.findByTitle(st, pageable);

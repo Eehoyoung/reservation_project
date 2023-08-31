@@ -1,0 +1,16 @@
+
+V
+java:S4684&"@Replace this persistent entity with a simple POJO or DTO object.(Žãž‚
+S	java:S106)"9Replace this use of System.out or System.err by a logger.(¦¸Ç—ýÿÿÿÿ
+U
+java:S46842"@Replace this persistent entity with a simple POJO or DTO object.(úñz
+T
+java:S1854;">Remove this useless assignment to local variable "hostEntity".(‘î“å
+T
+java:S18549">Remove this useless assignment to local variable "hostEntity".(¸ûàÇ
+E
+java:S14819"/Remove this unused "hostEntity" local variable.(¸ûàÇ
+K
+java:S1611>"5Remove the parentheses around the "element" parameter(„…ù¯
+P
+java:S1611J"5Remove the parentheses around the "element" parameter(˜ÿ–¦ùÿÿÿÿ

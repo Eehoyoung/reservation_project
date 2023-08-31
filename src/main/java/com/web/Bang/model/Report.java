@@ -1,14 +1,18 @@
 package com.web.Bang.model;
 
 import com.web.Bang.model.type.ReportType;
-import lombok.Data;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Data
+@ToString
 public class Report {
 
     @Id
