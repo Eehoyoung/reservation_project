@@ -89,52 +89,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    @Transactional
-    public List<User> searchRoleAndUser(String role, String name) {
-        List<User> users = userRepository.findByRoleAndUserName(role, name);
-        return sortUserList(users);
-    }
-
-    @Override
-    @Transactional
-    public List<User> searchUserOnly(String name) {
-        List<User> users = userRepository.findByUsernameContaining(name);
-        return sortUserList(users);
-    }
-
-    private List<User> sortUserList(List<User> users) {
-        users.sort((o1, o2) -> Integer.compare(o2.getId(), o1.getId()));
-        return users;
-    }
-
-    @Override
-    public List<AdmintableDto> loadHouseDtolist(String month, String string) {
-        return qlrmRepository.returnDataList(queryStorage.findByMonthBestHouse(month, Integer.parseInt(string)), AdmintableDto.class);
-    }
-
-    @Override
-    public List<AdmintableDto> loadAddressHouseCount() {
-        return qlrmRepository.returnDataList(queryStorage.loadAddressHouseCount(), AdmintableDto.class);
-    }
-
-    @Override
-    public List<AdmintableDto> loadMonthTableCount(String table) {
-        return qlrmRepository.returnDataList(queryStorage.loadMonthTableCount(table), AdmintableDto.class);
-    }
-
-    @Override
     @Transactional(readOnly = true)
     public User getUserById(int userId) {
         return userRepository.findById(userId).orElseThrow(
                 () -> new IllegalArgumentException("존재 하지 않는 사용자 입니다.")
         );
-    }
-
-    @Override
-    @Modifying
-    @Transactional
-    public void deleteUser(int id) {
-        userRepository.deleteById(id);
     }
 
     @Override

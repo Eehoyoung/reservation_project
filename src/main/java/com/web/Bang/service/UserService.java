@@ -19,24 +19,8 @@ public interface UserService {
 
     User findByUserId(int id);
 
-    @Transactional
-    List<User> searchRoleAndUser(String role, String name);
-
-    @Transactional
-    List<User> searchUserOnly(String name);
-
-    List<AdmintableDto> loadHouseDtolist(String month, String string);
-
-    List<AdmintableDto> loadAddressHouseCount();
-
-    List<AdmintableDto> loadMonthTableCount(String table);
-
     @Transactional(readOnly = true)
     User getUserById(int userId);
-
-    @Modifying
-    @Transactional
-    void deleteUser(int id);
 
     User getUser(String loginId);
 }
