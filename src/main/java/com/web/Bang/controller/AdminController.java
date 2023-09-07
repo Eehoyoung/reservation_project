@@ -1,7 +1,7 @@
 package com.web.Bang.controller;
 
 import com.web.Bang.model.User;
-import com.web.Bang.service.UserServiceImpl;
+import com.web.Bang.service.AdminServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,7 +15,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AdminController {
 
-    private final UserServiceImpl userService;
+    private final AdminServiceImpl adminService;
 
     @GetMapping("/admin/user-management")
     public String adminForm(@RequestParam Map<String, String> map, Model model) {
@@ -26,7 +26,7 @@ public class AdminController {
         List<User> user;
         if (role.isEmpty()) {
             try {
-                user = userService.searchUserOnly(q);
+                user = adminService.searchUserOnly(q);
                 model.addAttribute("users", user);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -34,7 +34,7 @@ public class AdminController {
 
         } else {
             try {
-                user = userService.searchRoleAndUser(role, q);
+                user = adminService.searchRoleAndUser(role, q);
                 model.addAttribute("users", user);
             } catch (Exception e) {
                 e.printStackTrace();
