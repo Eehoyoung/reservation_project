@@ -11,16 +11,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.text.MessageFormat;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -52,6 +50,7 @@ public class LoginController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null) {
             new SecurityContextLogoutHandler().logout(request, response, authentication);
+            tokenService.logoutToken(request, response);
         }
         return "redirect:/";
     }
@@ -88,21 +87,21 @@ public class LoginController {
                             @RequestParam("password") String password,
                             HttpServletResponse response) {
 
-        boolean flag = userService.loginService(username,password);
+        boolean flag = userService.loginService(username, password);
 
-        if(!flag){
+        if (!flag) {
             return "redirect:/auth/login_form";
         }
 
-            User authenticatedUser = userService.getUser(username);
+        User authenticatedUser = userService.getUser(username);
 
-            final String JwtToken = tokenProvider.createToken(authenticatedUser);
+        final String JwtToken = tokenProvider.createToken(authenticatedUser);
 
-            Cookie jwtCookie = tokenService.createJwtCookie(authenticatedUser, JwtToken);
+        Cookie jwtCookie = tokenService.createJwtCookie(authenticatedUser, JwtToken);
 
-            response.addCookie(jwtCookie);
+        response.addCookie(jwtCookie);
 
-            return "redirect:/";
+        return "redirect:/";
 
     }
 }
