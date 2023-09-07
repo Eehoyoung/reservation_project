@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
     @Transactional
@@ -37,4 +38,6 @@ public interface UserService {
     @Modifying
     @Transactional
     void deleteUser(int id);
+
+    User getUser(String loginId);
 }

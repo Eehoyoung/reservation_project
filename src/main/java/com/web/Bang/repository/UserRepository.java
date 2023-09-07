@@ -11,7 +11,8 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
 
-    Optional<User> findByUsername(String username);
+    @Query("select u from User u where u.username = :username")
+    Optional<User> findByUsername(@Param("username") String username);
 
     @Transactional
     @Query(value = "select * \r\n" + "from user \r\n" + "where username like %:name% \r\n"

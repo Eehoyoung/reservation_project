@@ -15,7 +15,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class CSBoardServiceImpl implements CSBoardService{
+public class CSBoardServiceImpl implements CSBoardService {
 
     private final CSBoardRepository csBoardRepository;
     private final CSReplyRepository csReplyRepository;

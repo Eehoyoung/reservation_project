@@ -2,7 +2,6 @@ package com.web.Bang.controller.apicontroller;
 
 import com.web.Bang.auth.PrincipalDetail;
 import com.web.Bang.dto.ResponseDto;
-import com.web.Bang.dto.adminDto.AdmintableDto;
 import com.web.Bang.model.User;
 import com.web.Bang.model.type.RoleType;
 import com.web.Bang.service.UserServiceImpl;
@@ -14,12 +13,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -65,34 +61,4 @@ public class UserApiController {
         collectors.forEach((element) -> element.getAuthority().replace("HOST", "GUEST"));
         return "<script>location.href='/user/beguest'</script>";
     }
-
-    // index=3&month=3&limit=10
-    // index=1
-    // index=2
-    @GetMapping("/admin/adminTable")
-    public ResponseDto<Map<String, List<AdmintableDto>>> loadTableData(@RequestParam Map<String, String> data) {
-        Map<String, List<AdmintableDto>> maps = new LinkedMultiValueMap<>();
-        switch (data.get("index")) {
-            case "0":
-                maps.put("user", userService.loadMonthTableCount("user"));
-                maps.put("house", userService.loadMonthTableCount("house"));
-                maps.put("reservation", userService.loadMonthTableCount("reservation"));
-                maps.put("review", userService.loadMonthTableCount("review"));
-                return new ResponseDto<>(HttpStatus.OK.value(), maps);
-            case "1":
-                maps.put("address", userService.loadAddressHouseCount());
-                return new ResponseDto<>(HttpStatus.OK.value(), maps);
-            default:
-                maps.put("best", userService.loadHouseDtolist(data.get("month"), data.get("limit")));
-                return new ResponseDto<>(HttpStatus.OK.value(), maps);
-        }
-    }
-
-    @DeleteMapping("/admin/user/delete/{id}")
-    public ResponseDto<Integer> deleteUser(@PathVariable int id) {
-        userService.deleteUser(id);
-        return new ResponseDto<>(HttpStatus.OK.value(), 1);
-    }
-
-
 }

@@ -5,7 +5,10 @@ import com.web.Bang.dto.DateModelDto;
 import com.web.Bang.dto.HouseWaitDto;
 import com.web.Bang.dto.ResponsePaidDto;
 import com.web.Bang.dto.kakao.KaKaoPayResponseDto;
-import com.web.Bang.model.*;
+import com.web.Bang.model.BookedDate;
+import com.web.Bang.model.House;
+import com.web.Bang.model.Reservation;
+import com.web.Bang.model.User;
 import com.web.Bang.service.HouseServiceImpl;
 import com.web.Bang.service.ReservationServiceImpl;
 import com.web.Bang.service.UserServiceImpl;
@@ -77,10 +80,10 @@ public class ReservationController {
 
     // 카카오 결제 완료 시 redirect 되는 주소
     @GetMapping("/guest/kakao/approve")
-    public String approve(@RequestParam String pgToken, Model model) {
+    public String approve(@RequestParam String pg_token, Model model) {
         ResponsePaidDto paidDto = (ResponsePaidDto) httpSession.getAttribute("kakao");
         httpSession.removeAttribute("kakao");
-        ResponseEntity<KaKaoPayResponseDto> response = requestKakaoPaymentApprove(pgToken, paidDto);
+        ResponseEntity<KaKaoPayResponseDto> response = requestKakaoPaymentApprove(pg_token, paidDto);
         KaKaoPayResponseDto dto = response.getBody();
 
         if (response.getStatusCode() == HttpStatus.OK) {

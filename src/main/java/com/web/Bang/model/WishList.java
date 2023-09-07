@@ -8,6 +8,7 @@ import java.io.Serializable;
 @Entity
 @Data
 @IdClass(LikeId.class)
+@Table(name = "likehouse")
 public class WishList implements Serializable {
 
     @Id

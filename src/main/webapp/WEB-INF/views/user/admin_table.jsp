@@ -20,7 +20,8 @@
         right: 20px;
         bottom: 2px;
     }
-    .btn22{
+
+    .btn22 {
         position: absolute;
         right: 20px;
         buttom: 20px;

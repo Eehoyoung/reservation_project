@@ -81,7 +81,7 @@ public class ReportServiceImpl implements ReportService {
 
         ReportType reportType = reportEntity.getReportStatus();
 
-        if(approveDto.getApprove().equals("APPROVED")){
+        if (approveDto.getApprove().equals("APPROVED")) {
             // 승인시 해당 회원의 신고횟수가 1 증가한다.
             reportType = ReportType.APPROVED;
 
