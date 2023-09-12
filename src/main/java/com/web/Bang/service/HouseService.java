@@ -1,6 +1,7 @@
 package com.web.Bang.service;
 
 import com.web.Bang.dto.RequestPostDto;
+import com.web.Bang.dto.queryDslDto.HouseDto;
 import com.web.Bang.model.House;
 import com.web.Bang.model.User;
 import org.springframework.data.jpa.repository.Modifying;
@@ -20,19 +21,19 @@ public interface HouseService {
     void postHouse(RequestPostDto requestPostDto, User user);
 
     @Transactional
-    List<House> getHouseList();
+    List<HouseDto> getHouseList();
 
     @Transactional
     void addWishList(int houseId, User user);
 
     @Transactional
-    List<House> getHouseListByAddress(String address, int houseId);
+    List<HouseDto> getHouseListByAddress(String address, int houseId);
 
     @Transactional
     void deleteItemOfWishList(int houseId, int guestId);
 
     @Transactional
-    List<House> findAllByHostId(int hostId);
+    List<HouseDto> findAllByHostId(int hostId);
 
     @Transactional
     void updateHouse(int houseId, RequestPostDto requestPostDto);
@@ -41,13 +42,13 @@ public interface HouseService {
     int getReviewCount(int houseId);
 
     @Transactional
-    List<House> searchHouseByAddressAndType(String address, String type);
+    List<HouseDto> searchHouseByAddressAndType(String address, String type);
 
     @Transactional
-    List<House> searchHouseByAddressOrType(String address, String type);
+    List<HouseDto> searchHouseByAddressOrType(String address, String type);
 
     @Transactional
-    List<House> getHouseOrderByStarScore();
+    List<HouseDto> getHouseOrderByStarScore();
 
     @Transactional
     House findById(int houseId);

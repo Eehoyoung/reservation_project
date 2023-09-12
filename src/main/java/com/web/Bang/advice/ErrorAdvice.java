@@ -8,6 +8,7 @@ public class ErrorAdvice {
 
     @ExceptionHandler(value = Exception.class)
     public String showError(Exception e) {
+        e.printStackTrace();
         return "/advice/errorPage";
     }
 }

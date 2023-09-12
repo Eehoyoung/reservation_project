@@ -2,6 +2,7 @@ package com.web.Bang.service;
 
 import com.web.Bang.dto.ApproveDto;
 import com.web.Bang.dto.ReportDto;
+import com.web.Bang.dto.queryDslDto.ReportQueryDto;
 import com.web.Bang.model.Reply;
 import com.web.Bang.model.Report;
 import com.web.Bang.model.Review;
@@ -61,13 +62,13 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Report> getReportList(int reporterId) {
+    public List<ReportQueryDto> getReportList(int reporterId) {
         return reportRepository.findAllByReporter(reporterId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Report> getAllReport() {
+    public List<ReportQueryDto> getAllReport() {
         return reportRepository.findAllOrderByIdDesc();
 
     }

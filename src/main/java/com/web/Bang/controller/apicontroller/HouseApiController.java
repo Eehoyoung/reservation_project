@@ -4,8 +4,8 @@ import com.web.Bang.auth.PrincipalDetail;
 import com.web.Bang.dto.KakaoSearchDto;
 import com.web.Bang.dto.ResponseDto;
 import com.web.Bang.dto.kakao.Document;
+import com.web.Bang.dto.queryDslDto.ReviewDto;
 import com.web.Bang.model.House;
-import com.web.Bang.model.Review;
 import com.web.Bang.service.HouseServiceImpl;
 import com.web.Bang.service.ReviewServiceImpl;
 import com.web.Bang.service.WishListServiceImpl;
@@ -60,8 +60,8 @@ public class HouseApiController {
     }
 
     @GetMapping("/review-list/{houseId}")
-    public Page<Review> getReviewPage(@PathVariable int houseId,
-                                      @PageableDefault(size = 3, sort = "id", direction = Direction.DESC) Pageable pageable) {
+    public Page<ReviewDto> getReviewPage(@PathVariable int houseId,
+                                         @PageableDefault(size = 3, sort = "id", direction = Direction.DESC) Pageable pageable) {
 
         // 조회한 숙소의 리뷰 목록
         return reviewService.getReviewPageByHouseId(houseId, pageable);

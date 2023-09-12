@@ -1,6 +1,7 @@
 package com.web.Bang.controller;
 
 import com.web.Bang.auth.PrincipalDetail;
+import com.web.Bang.dto.queryDslDto.ReviewDto;
 import com.web.Bang.model.Review;
 import com.web.Bang.service.HouseServiceImpl;
 import com.web.Bang.service.ReservationServiceImpl;
@@ -48,7 +49,7 @@ public class ReviewController {
     @GetMapping("/host/review-management/{houseId}")
     public String getMyHouseReviewList(@PathVariable int houseId, Model model,
                                        @PageableDefault(size = 5, sort = "creationDate", direction = Direction.DESC) Pageable pageable) {
-        Page<Review> reviews = reviewService.getReviewPageByHouseId(houseId, pageable);
+        Page<ReviewDto> reviews = reviewService.getReviewPageByHouseId(houseId, pageable);
 
         int nowPage = reviews.getPageable().getPageNumber() + 1;
         int startPage = Math.max(nowPage - 2, 1);
@@ -76,7 +77,7 @@ public class ReviewController {
     @GetMapping("/guest/my-review-list/{guestId}")
     public String getMyReviewList(@PathVariable int guestId, Model model,
                                   @PageableDefault(size = 5, sort = "creationDate", direction = Direction.DESC) Pageable pageable) {
-        Page<Review> reviews = reviewService.getReviewListByGuestId(guestId, pageable);
+        Page<ReviewDto> reviews = reviewService.getReviewListByGuestId(guestId, pageable);
 
         int nowPage = reviews.getPageable().getPageNumber() + 1;
         int startPage = Math.max(nowPage - 2, 1);

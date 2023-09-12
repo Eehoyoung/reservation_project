@@ -1,5 +1,6 @@
 package com.web.Bang.service;
 
+import com.web.Bang.dto.queryDslDto.CustomServiceBoardDto;
 import com.web.Bang.model.CustomServiceBoard;
 import com.web.Bang.model.CustomServiceReply;
 import org.springframework.data.domain.Page;
@@ -10,9 +11,9 @@ import java.util.List;
 public interface CSBoardService {
     void writeBoard(CustomServiceBoard customServiceBoard);
 
-    Page<CustomServiceBoard> findByTitle(String title, Pageable pageable);
+    Page<CustomServiceBoardDto> findByTitle(String title, Pageable pageable);
 
-    List<CustomServiceBoard> loadNoticeBoards();
+    List<CustomServiceBoardDto> loadNoticeBoards();
 
     CustomServiceBoard findCSboardByid(int id);
 

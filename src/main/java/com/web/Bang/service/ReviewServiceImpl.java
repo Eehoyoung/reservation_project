@@ -1,6 +1,6 @@
 package com.web.Bang.service;
 
-import com.web.Bang.dto.HouseScoreDto;
+import com.web.Bang.dto.queryDslDto.ReviewDto;
 import com.web.Bang.model.House;
 import com.web.Bang.model.Reply;
 import com.web.Bang.model.Review;
@@ -8,14 +8,13 @@ import com.web.Bang.model.User;
 import com.web.Bang.repository.HouseRepository;
 import com.web.Bang.repository.ReplyRepository;
 import com.web.Bang.repository.ReviewRepository;
-import com.web.Bang.repository.queryStorage.QlrmRepository;
-import com.web.Bang.repository.queryStorage.StarScoreQueryStorage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,10 +24,6 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
 
     private final ReplyRepository replyRepository;
-
-    private final QlrmRepository<HouseScoreDto> qlrmRepository;
-
-    private final StarScoreQueryStorage queryStorage;
 
     private final HouseRepository houseRepository;
 
@@ -42,9 +37,7 @@ public class ReviewServiceImpl implements ReviewService {
         House houseEntity = houseRepository.findById(review.getHouseId().getId()).orElseThrow(
                 () -> new IllegalArgumentException("존재 하지 않는 숙소 입니다.")
         );
-        double avgStarScore = qlrmRepository
-                .returnDataList(queryStorage.getAvgStarScoreByHouse(houseEntity.getId()), HouseScoreDto.class)
-                .get(0).getScore();
+        double avgStarScore = reviewRepository.getAvgStarScoreByHouse(review.getHouseId().getId()).get(0).getStarScore();
 
         houseEntity.setStarScore(avgStarScore);
         review.setGuestId(user);
@@ -70,16 +63,23 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    @Transactional
-    public Page<Review> getReviewPageByHouseId(int houseId, Pageable pageable) {
-        return reviewRepository.findAllByHouseId(houseId, pageable);
+    @Transactional(readOnly = true)
+    public Page<ReviewDto> getReviewPageByHouseId(int houseId, Pageable pageable) {
+        return reviewRepository.findAllByHouseId(houseId, pageable).map(review -> new ReviewDto(
+                review.getId(),
+                review.getHouseId(),
+                review.getGuestId(),
+                review.getContent(),
+                review.getStarScore(),
+                review.getCreationDate(),
+                new ArrayList<>(review.getReplies())
+        ));
     }
-
     @Override
     @Transactional
-    public HouseScoreDto getAvgStarScore(int houseId) {
+    public ReviewDto getAvgStarScore(int houseId) {
         try {
-            return qlrmRepository.returnDataList(queryStorage.getAvgStarScoreByHouse(houseId), HouseScoreDto.class).get(0);
+            return reviewRepository.getAvgStarScoreByHouse(houseId).get(0);
         } catch (IndexOutOfBoundsException e) {
             return null;
         }
@@ -121,14 +121,21 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Review> getReviewListByHouseId(int houseId) {
+    public List<ReviewDto> getReviewListByHouseId(int houseId) {
         return reviewRepository.findAllByHouseId(houseId);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Review> getReviewListByGuestId(int guestId, Pageable pageable) {
-        return reviewRepository.findAllByGuestId(guestId, pageable);
+    public Page<ReviewDto> getReviewListByGuestId(int guestId, Pageable pageable) {
+        return reviewRepository.findAllByGuestId(guestId, pageable).map(review -> new ReviewDto(
+                review.getId(),
+                review.getHouseId(),
+                review.getGuestId(),
+                review.getContent(),
+                review.getStarScore(),
+                review.getCreationDate(),
+                new ArrayList<>(review.getReplies())));
     }
 
 }

@@ -1,6 +1,6 @@
 package com.web.Bang.controller;
 
-import com.web.Bang.model.User;
+import com.web.Bang.dto.queryDslDto.UserDto;
 import com.web.Bang.service.AdminServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -23,7 +23,7 @@ public class AdminController {
         String role = map.get("role") == null ? "" : map.get("role");
         String q = map.get("q") == null ? "" : map.get("q");
         System.out.println(role + "/" + q);
-        List<User> user;
+        List<UserDto> user;
         if (role.isEmpty()) {
             try {
                 user = adminService.searchUserOnly(q);

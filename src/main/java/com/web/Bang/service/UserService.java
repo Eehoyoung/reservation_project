@@ -1,11 +1,7 @@
 package com.web.Bang.service;
 
-import com.web.Bang.dto.adminDto.AdmintableDto;
 import com.web.Bang.model.User;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 public interface UserService {
     @Transactional

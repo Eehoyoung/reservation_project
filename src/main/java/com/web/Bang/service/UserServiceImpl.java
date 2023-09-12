@@ -1,15 +1,11 @@
 package com.web.Bang.service;
 
 import com.web.Bang.auth.PrincipalDetail;
-import com.web.Bang.dto.adminDto.AdmintableDto;
 import com.web.Bang.model.User;
 import com.web.Bang.model.type.LoginType;
 import com.web.Bang.model.type.RoleType;
 import com.web.Bang.repository.UserRepository;
-import com.web.Bang.repository.queryStorage.AdminTableQueryStorage;
-import com.web.Bang.repository.queryStorage.QlrmRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,17 +13,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
-
-    private final QlrmRepository<AdmintableDto> qlrmRepository;
-
-    private final AdminTableQueryStorage queryStorage;
 
     private final BCryptPasswordEncoder encoder;
 

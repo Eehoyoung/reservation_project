@@ -2,6 +2,7 @@ package com.web.Bang.service;
 
 import com.web.Bang.dto.ApproveDto;
 import com.web.Bang.dto.ReportDto;
+import com.web.Bang.dto.queryDslDto.ReportQueryDto;
 import com.web.Bang.model.Report;
 import com.web.Bang.model.User;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,10 +17,10 @@ public interface ReportService {
     void reportReview(User user, int reviewId);
 
     @Transactional(readOnly = true)
-    List<Report> getReportList(int reporterId);
+    List<ReportQueryDto> getReportList(int reporterId);
 
     @Transactional(readOnly = true)
-    List<Report> getAllReport();
+    List<ReportQueryDto> getAllReport();
 
     @Transactional
     Report setReportStatus(ApproveDto approveDto);

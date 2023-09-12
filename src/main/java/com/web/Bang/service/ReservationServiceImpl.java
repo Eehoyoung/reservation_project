@@ -1,8 +1,10 @@
 package com.web.Bang.service;
 
 import com.web.Bang.dto.ApproveDto;
-import com.web.Bang.dto.HostTableDto;
 import com.web.Bang.dto.HouseWaitDto;
+import com.web.Bang.dto.queryDslDto.BookedDateDto;
+import com.web.Bang.dto.queryDslDto.HostTableDto;
+import com.web.Bang.dto.queryDslDto.ReservationDto;
 import com.web.Bang.model.BookedDate;
 import com.web.Bang.model.House;
 import com.web.Bang.model.Reservation;
@@ -12,8 +14,6 @@ import com.web.Bang.repository.BookedDateRepository;
 import com.web.Bang.repository.HouseRepository;
 import com.web.Bang.repository.ReservationRepository;
 import com.web.Bang.repository.UserRepository;
-import com.web.Bang.repository.queryStorage.HostTableQueryStorage;
-import com.web.Bang.repository.queryStorage.QlrmRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
@@ -27,12 +27,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReservationServiceImpl implements ReservationService {
 
-    // 리뷰 테스트 용
     public static int REVIEW_TEST = 0;
-
-    private final HostTableQueryStorage queryStorage;
-
-    private final QlrmRepository qlrmRepository;
 
     private final UserRepository userRepository;
 
@@ -82,18 +77,18 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     @Modifying
     @Transactional
-    public List<Reservation> getReservation(User user) {
-        List<Reservation> reservation;
+    public List<ReservationDto> getReservation(User user) {
+        List<ReservationDto> reservation;
         reservation = reservationRepository.findByGuestId(user.getId());
         changeCompletedType(reservation);
         return reservation;
     }
 
-    private void changeCompletedType(List<Reservation> listRes) {
+    private void changeCompletedType(List<ReservationDto> listRes) {
         LocalDate nowtime = LocalDate.now();
         Date nowDate = Date.valueOf(nowtime);
 
-        for (Reservation reservation : listRes) {
+        for (ReservationDto reservation : listRes) {
             if (reservation.getApprovalStatus() != ReservationType.PAID) {
                 continue;
             }
@@ -109,30 +104,30 @@ public class ReservationServiceImpl implements ReservationService {
     @Modifying
     @Transactional
     public List<HostTableDto> getTableInfo(int hostId, int houseId, int month) {
-        List<Reservation> reservation = reservationRepository.findByHostId(hostId);
+        List<ReservationDto> reservation = reservationRepository.findByHostId(hostId);
         changeCompletedType(reservation);
-        return qlrmRepository.returnDataList(queryStorage.getlist(hostId, houseId, month), HostTableDto.class);
+        return reservationRepository.getlist(hostId, houseId, month);
     }
 
     @Override
     @Modifying
     @Transactional
     public List<HostTableDto> getTableInfo(int hostId, int month) {
-        List<Reservation> reservation = reservationRepository.findByHostId(hostId);
+        List<ReservationDto> reservation = reservationRepository.findByHostId(hostId);
         changeCompletedType(reservation);
-        return qlrmRepository.returnDataList(queryStorage.getlist(hostId, month), HostTableDto.class);
+        return reservationRepository.getlist(hostId, month);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<BookedDate> getListBookedDate(int houseid) {
+    public List<BookedDateDto> getListBookedDate(int houseid) {
         return bookedDateRepository.findAllByHouseId(houseid);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<HouseWaitDto> getWaitCount(int hostid) {
-        return qlrmRepository.returnDataList(queryStorage.getWaitCount(hostid), HouseWaitDto.class);
+        return reservationRepository.getWaitCount(hostid);
     }
 
     @Override

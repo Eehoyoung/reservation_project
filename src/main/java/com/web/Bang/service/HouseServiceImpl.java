@@ -1,6 +1,7 @@
 package com.web.Bang.service;
 
 import com.web.Bang.dto.RequestPostDto;
+import com.web.Bang.dto.queryDslDto.HouseDto;
 import com.web.Bang.model.House;
 import com.web.Bang.model.Image;
 import com.web.Bang.model.User;
@@ -11,7 +12,6 @@ import com.web.Bang.repository.LikeHouseRepository;
 import com.web.Bang.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -84,8 +84,8 @@ public class HouseServiceImpl implements HouseService {
 
     @Override
     @Transactional
-    public List<House> getHouseList() {
-        return houseRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
+    public List<HouseDto> getHouseList() {
+        return houseRepository.findAllHouse();
 
     }
 
@@ -104,7 +104,7 @@ public class HouseServiceImpl implements HouseService {
 
     @Override
     @Transactional
-    public List<House> getHouseListByAddress(String address, int houseId) {
+    public List<HouseDto> getHouseListByAddress(String address, int houseId) {
         return houseRepository.findAllByAddress(address, houseId).orElseGet(ArrayList::new);
     }
 
@@ -116,7 +116,7 @@ public class HouseServiceImpl implements HouseService {
 
     @Override
     @Transactional
-    public List<House> findAllByHostId(int hostId) {
+    public List<HouseDto> findAllByHostId(int hostId) {
         return houseRepository.findAllByHostId(hostId);
     }
 
@@ -164,19 +164,19 @@ public class HouseServiceImpl implements HouseService {
 
     @Override
     @Transactional
-    public List<House> searchHouseByAddressAndType(String address, String type) {
+    public List<HouseDto> searchHouseByAddressAndType(String address, String type) {
         return houseRepository.findAllByAddressAndTypeOrderByIdDesc(address, type);
     }
 
     @Override
     @Transactional
-    public List<House> searchHouseByAddressOrType(String address, String type) {
+    public List<HouseDto> searchHouseByAddressOrType(String address, String type) {
         return houseRepository.findAllByAddressOrTypeOrderByIdDesc(address, type);
     }
 
     @Override
     @Transactional
-    public List<House> getHouseOrderByStarScore() {
+    public List<HouseDto> getHouseOrderByStarScore() {
         return houseRepository.findAllByStarScore();
 
     }

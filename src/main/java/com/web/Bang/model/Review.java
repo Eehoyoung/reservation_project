@@ -43,7 +43,7 @@ public class Review {
     @CreationTimestamp
     private Timestamp creationDate;
 
-    @OneToMany(mappedBy = "reviewId", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "reviewId", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @JsonIgnoreProperties({"reviewId"})
     @OrderBy("id DESC")
     private List<Reply> replies;

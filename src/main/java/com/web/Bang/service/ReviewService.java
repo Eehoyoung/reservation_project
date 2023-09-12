@@ -1,6 +1,6 @@
 package com.web.Bang.service;
 
-import com.web.Bang.dto.HouseScoreDto;
+import com.web.Bang.dto.queryDslDto.ReviewDto;
 import com.web.Bang.model.Reply;
 import com.web.Bang.model.Review;
 import com.web.Bang.model.User;
@@ -21,10 +21,10 @@ public interface ReviewService {
     Reply addReply(int reviewId, Reply requestReply);
 
     @Transactional
-    Page<Review> getReviewPageByHouseId(int houseId, Pageable pageable);
+    Page<ReviewDto> getReviewPageByHouseId(int houseId, Pageable pageable);
 
     @Transactional
-    HouseScoreDto getAvgStarScore(int houseId);
+    ReviewDto getAvgStarScore(int houseId);
 
     @Transactional
     Reply updateReply(int replyId, Reply reply);
@@ -39,8 +39,8 @@ public interface ReviewService {
     Review updateReview(int reviewId, Review review);
 
     @Transactional(readOnly = true)
-    List<Review> getReviewListByHouseId(int houseId);
+    List<ReviewDto> getReviewListByHouseId(int houseId);
 
     @Transactional(readOnly = true)
-    Page<Review> getReviewListByGuestId(int guestId, Pageable pageable);
+    Page<ReviewDto> getReviewListByGuestId(int guestId, Pageable pageable);
 }

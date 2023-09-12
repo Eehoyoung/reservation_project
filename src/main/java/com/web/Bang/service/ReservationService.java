@@ -1,9 +1,10 @@
 package com.web.Bang.service;
 
 import com.web.Bang.dto.ApproveDto;
-import com.web.Bang.dto.HostTableDto;
 import com.web.Bang.dto.HouseWaitDto;
-import com.web.Bang.model.BookedDate;
+import com.web.Bang.dto.queryDslDto.BookedDateDto;
+import com.web.Bang.dto.queryDslDto.HostTableDto;
+import com.web.Bang.dto.queryDslDto.ReservationDto;
 import com.web.Bang.model.Reservation;
 import com.web.Bang.model.User;
 import org.springframework.data.jpa.repository.Modifying;
@@ -17,7 +18,7 @@ public interface ReservationService {
 
     @Modifying
     @Transactional
-    List<Reservation> getReservation(User user);
+    List<ReservationDto> getReservation(User user);
 
     @Modifying
     @Transactional
@@ -28,7 +29,7 @@ public interface ReservationService {
     List<HostTableDto> getTableInfo(int hostId, int month);
 
     @Transactional(readOnly = true)
-    List<BookedDate> getListBookedDate(int houseid);
+    List<BookedDateDto> getListBookedDate(int houseid);
 
     @Transactional(readOnly = true)
     List<HouseWaitDto> getWaitCount(int hostid);

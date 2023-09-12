@@ -5,7 +5,9 @@ import com.web.Bang.dto.DateModelDto;
 import com.web.Bang.dto.HouseWaitDto;
 import com.web.Bang.dto.ResponsePaidDto;
 import com.web.Bang.dto.kakao.KaKaoPayResponseDto;
-import com.web.Bang.model.BookedDate;
+import com.web.Bang.dto.queryDslDto.BookedDateDto;
+import com.web.Bang.dto.queryDslDto.HouseDto;
+import com.web.Bang.dto.queryDslDto.ReservationDto;
 import com.web.Bang.model.House;
 import com.web.Bang.model.Reservation;
 import com.web.Bang.model.User;
@@ -44,7 +46,7 @@ public class ReservationController {
 
         int index = 0;
         ArrayList<DateModelDto> dates = new ArrayList<>();
-        for (BookedDate date : reservationService.getListBookedDate(houseid)) {
+        for (BookedDateDto date : reservationService.getListBookedDate(houseid)) {
             DateModelDto dto = new DateModelDto();
             dto.setDate(date.getBookedDate());
             dto.setIndex(index);
@@ -63,7 +65,7 @@ public class ReservationController {
     @GetMapping("/host/reserveTable")
     public String reserveHostTable(@AuthenticationPrincipal PrincipalDetail principalDetail, Model model) {
         List<HouseWaitDto> count = reservationService.getWaitCount(principalDetail.getUser().getId());
-        List<House> houses = houseService.findAllByHostId(principalDetail.getUser().getId());
+        List<HouseDto> houses = houseService.findAllByHostId(principalDetail.getUser().getId());
         model.addAttribute("houses", houses);
         model.addAttribute("count", count);
         return "reservation/hostReserveTable";
@@ -73,7 +75,7 @@ public class ReservationController {
     @GetMapping("/guest/reserveTable")
     public String reserveUserTable(@AuthenticationPrincipal PrincipalDetail principalDetail, Model model) {
         User user = userService.findByUserId(principalDetail.getUser().getId());
-        List<Reservation> res = reservationService.getReservation(user);
+        List<ReservationDto> res = reservationService.getReservation(user);
         model.addAttribute("reservations", res);
         return "reservation/userReservationTable";
     }

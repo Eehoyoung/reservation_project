@@ -1,10 +1,10 @@
 package com.web.Bang.controller;
 
 import com.web.Bang.auth.PrincipalDetail;
-import com.web.Bang.dto.HouseScoreDto;
 import com.web.Bang.dto.RequestPostDto;
+import com.web.Bang.dto.queryDslDto.HouseDto;
+import com.web.Bang.dto.queryDslDto.ReviewDto;
 import com.web.Bang.model.House;
-import com.web.Bang.model.Review;
 import com.web.Bang.model.WishList;
 import com.web.Bang.service.HouseServiceImpl;
 import com.web.Bang.service.ReviewServiceImpl;
@@ -36,7 +36,7 @@ public class HouseController {
     public String getHouseList(Model model, String address, String type) {
 
         // 지역별, 유형별 숙소 검색
-        List<House> houseList;
+        List<HouseDto> houseList;
 
         address = (address == null) ? "" : address;
         type = type == null ? "" : type;
@@ -58,15 +58,15 @@ public class HouseController {
 
     // 숙소 상세정보 페이지 호출
     @GetMapping("/user/house-detail/{houseId}")
-    public String getHouseDetail(@PathVariable int houseId, Model model,
+    public String getHouseDetail(@PathVariable("houseId") int houseId, Model model,
                                  @AuthenticationPrincipal PrincipalDetail principalDetail,
                                  @PageableDefault(size = 3, sort = "id", direction = Direction.DESC) Pageable pageable) {
         // 조회한 숙소
         House houseEntity = houseService.getHouseDetail(houseId);
         // 조회한 숙소와 같은 지역의 숙소 목록
-        List<House> houseList = houseService.getHouseListByAddress(houseEntity.getAddress(), houseEntity.getId());
+        List<HouseDto> houseList = houseService.getHouseListByAddress(houseEntity.getAddress(), houseEntity.getId());
         // 조회한 숙소의 리뷰 목록
-        Page<Review> reviews = reviewService.getReviewPageByHouseId(houseId, pageable);
+        Page<ReviewDto> reviews = reviewService.getReviewPageByHouseId(houseId, pageable);
         // 숙소 리뷰의 총 개수
         int reviewCount = houseService.getReviewCount(houseId);
         // 조회한 사용자가 해당 숙소를 위시리스트에 넣었는지
@@ -75,7 +75,7 @@ public class HouseController {
             wishListEntity = wishListService.checkWishList(houseId, principalDetail.getUser().getId());
         }
         // 숙소의 평균 평점
-        HouseScoreDto houseScoreDto = reviewService.getAvgStarScore(houseId) == null ? new HouseScoreDto() : reviewService.getAvgStarScore(houseId);
+        ReviewDto reviewDto = reviewService.getAvgStarScore(houseId) == null ? new ReviewDto() : reviewService.getAvgStarScore(houseId);
         // 위시리스트 카운트
         int likeCount = wishListService.getLikeCount(houseId);
 
@@ -84,7 +84,7 @@ public class HouseController {
         model.addAttribute("reviews", reviews);
         model.addAttribute("likeHouse", wishListEntity);
         model.addAttribute("reviewCount", reviewCount);
-        model.addAttribute("avgScore", houseScoreDto.getScore());
+        model.addAttribute("avgScore", reviewDto.getStarScore());
         model.addAttribute("likeCount", likeCount);
         return "house/detail_form";
     }

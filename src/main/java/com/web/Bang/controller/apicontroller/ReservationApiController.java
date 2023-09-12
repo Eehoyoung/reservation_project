@@ -1,6 +1,10 @@
 package com.web.Bang.controller.apicontroller;
 
-import com.web.Bang.dto.*;
+import com.web.Bang.dto.ApproveDto;
+import com.web.Bang.dto.KaKaoApproveDto;
+import com.web.Bang.dto.ResponseDto;
+import com.web.Bang.dto.ResponsePaidDto;
+import com.web.Bang.dto.queryDslDto.HostTableDto;
 import com.web.Bang.model.Reservation;
 import com.web.Bang.service.ReservationServiceImpl;
 import lombok.RequiredArgsConstructor;

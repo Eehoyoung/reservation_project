@@ -1,5 +1,6 @@
 package com.web.Bang.service;
 
+import com.web.Bang.dto.queryDslDto.CustomServiceBoardDto;
 import com.web.Bang.model.CustomServiceBoard;
 import com.web.Bang.model.CustomServiceReply;
 import com.web.Bang.repository.CSBoardRepository;
@@ -28,13 +29,13 @@ public class CSBoardServiceImpl implements CSBoardService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<CustomServiceBoard> findByTitle(String title, Pageable pageable) {
+    public Page<CustomServiceBoardDto> findByTitle(String title, Pageable pageable) {
         return csBoardRepository.findByTitleContaining(title, pageable);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<CustomServiceBoard> loadNoticeBoards() {
+    public List<CustomServiceBoardDto> loadNoticeBoards() {
         return csBoardRepository.loadNoticeBoard();
     }
 

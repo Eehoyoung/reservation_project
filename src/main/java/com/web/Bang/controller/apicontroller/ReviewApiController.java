@@ -2,6 +2,7 @@ package com.web.Bang.controller.apicontroller;
 
 import com.web.Bang.auth.PrincipalDetail;
 import com.web.Bang.dto.ResponseDto;
+import com.web.Bang.dto.queryDslDto.ReviewDto;
 import com.web.Bang.model.Reply;
 import com.web.Bang.model.Review;
 import com.web.Bang.service.HouseServiceImpl;
@@ -74,7 +75,7 @@ public class ReviewApiController {
 
     // 리뷰 리스트
     @GetMapping("/list/{houseId}")
-    public List<Review> getReviewList(@PathVariable int houseId) {
+    public List<ReviewDto> getReviewList(@PathVariable int houseId) {
         return reviewService.getReviewListByHouseId(houseId);
     }
 

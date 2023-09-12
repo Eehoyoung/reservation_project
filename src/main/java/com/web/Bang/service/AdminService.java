@@ -1,7 +1,7 @@
 package com.web.Bang.service;
 
 import com.web.Bang.dto.adminDto.AdmintableDto;
-import com.web.Bang.model.User;
+import com.web.Bang.dto.queryDslDto.UserDto;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,8 +19,8 @@ public interface AdminService {
     List<AdmintableDto> loadMonthTableCount(String table);
 
     @Transactional
-    List<User> searchRoleAndUser(String role, String name);
+    List<UserDto> searchRoleAndUser(String role, String name);
 
     @Transactional
-    List<User> searchUserOnly(String name);
+    List<UserDto> searchUserOnly(String name);
 }
